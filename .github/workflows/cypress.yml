@@ -20,7 +20,7 @@ jobs:
       # 🏃 Start backend + frontend in background
       - name: Start app
         run: |
-          npm run start:server &
+          npm run start:server:cors &
           npm run start:client &
           npx wait-on http://localhost:3003
 
