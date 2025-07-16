@@ -85,6 +85,34 @@ class NotesVWPage {
       .type("{enter}");
     cy.contains(title).should("not.exist");
   }
+
+  accessibility() {
+    cy.intercept("GET", "**/notes").as("getNotes");
+    cy.visit("/notes");
+    cy.wait("@getNotes").its("response.statusCode").should("eq", 200);
+
+    cy.get('button, a, input, [tabindex]:not([tabindex="-1"])')
+      .not("[disabled]")
+      .eq(7)
+      .focus()
+      .click();
+    cy.get("h2").should("contain.text", "Deleting a note");
+  }
+
+  tabOrder() {
+    cy.get(notes_selectors.create_note).click();
+
+    const expectedTabOrder = [
+      '[data-cy="note-title-input"] input',
+      '[data-cy="note-content-input"]',
+      '[data-cy="note-save-btn"]',
+    ];
+
+    expectedTabOrder.forEach((selector) => {
+      cy.get(selector).focus();
+      cy.focused().should("match", selector).type("Test");
+    });
+  }
 }
 
 export default new NotesVWPage();
