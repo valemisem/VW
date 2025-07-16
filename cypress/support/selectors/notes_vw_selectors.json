@@ -1,0 +1,10 @@
+{
+  "create_note": "[data-cy=\"create-note-btn\"]",
+  "note_title_input": "[data-cy=\"note-title-input\"]",
+  "note_content_input": "[data-cy=\"note-content-input\"]",
+  "note_save_btn": "[data-cy=\"note-save-btn\"]",
+  "notes_link": "a[href=\"/notes\"]",
+  "search_input": "[data-cy=\"search-input\"]",
+  "edit_button": "button[aria-label=\"edit button\"]",
+  "delete_button": "button[aria-label=\"delete button\"]"
+}
