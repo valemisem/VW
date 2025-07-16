@@ -7,15 +7,16 @@
   "scripts": {
     "start:client": "vite --port 3003 --open --host",
     "start:server": "json-server --watch db.json --port 3004",
-    "dev:all": "concurrently \"npm run start:server\" \"npm run start:client\"",
-     "cypress:open": "cypress open",
-    "cypress:run":  "cypress run",
-    "cy:open": "start-server-and-test dev:all http://localhost:3003 cypress:open",
-    "cy:run":  "start-server-and-test dev:all http://localhost:3003 cypress:run",
+    "start:server:cors": "json-server --watch db.json --port 3004 --host 0.0.0.0",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "test": "vitest",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    
+    "start:both": "concurrently \"npm run start:server:cors\" \"npm run start:client\"",
+    "cypress:open:only": "cypress open",
+    "cypress:open": "start-server-and-test start:server:cors http://localhost:3004/notes \"start-server-and-test start:client http://localhost:3003 cypress:open:only\"",
+    "cypress:run": "cypress run"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.80.6",
