@@ -1,0 +1,33 @@
+name: E2E (Cypress)
+
+on: [push, pull_request]
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install deps
+        run: npm ci
+
+      # 🏃 Start backend + frontend in background
+      - name: Start app
+        run: |
+          npm run start:server &
+          npm run start:client &
+          npx wait-on http://localhost:3003
+
+      # 🚦 Run Cypress
+      - name: Cypress run
+        uses: cypress-io/github-action@v5
+        with:
+          config-file: cypress.config.cjs
+          wait-on: 'http://localhost:3003'
+          wait-on-timeout: 120 # seconds
