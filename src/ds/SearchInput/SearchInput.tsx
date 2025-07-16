@@ -46,7 +46,7 @@ export const SearchInput: FC<Props> = ({ className, ref, ...props }) => {
   return (
     <Container className={className}>
       <GoSearch role="img" />
-      <StyledInput ref={ref} type="text" {...props} />
+      <StyledInput data-cy="search-input" ref={ref} type="text" {...props} />
     </Container>
   );
 };
