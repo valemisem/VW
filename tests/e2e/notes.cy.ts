@@ -1,10 +1,25 @@
 import { longNameGeneration } from "../../cypress/support/utils/randomName";
 
 describe("Complete CRUD cycle", () => {
-  const signedDocDescription = longNameGeneration(); // generate ONCE before tests
+  const noteTitle = longNameGeneration();
 
   beforeEach(() => {
     cy.visit("/");
+  });
+
+  it("measures response time for accessing notes page", () => {
+    cy.intercept("GET", "**/notes").as("getNotes");
+
+    const start = performance.now();
+    cy.visit("/notes");
+
+    cy.wait("@getNotes").then(() => {
+      const end = performance.now();
+      const totalTime = Math.round(end - start);
+
+      cy.log(`API responded in ${totalTime} ms`);
+      expect(totalTime).to.be.lessThan(1000);
+    });
   });
 
   it("creates a new note", () => {
@@ -13,7 +28,7 @@ describe("Complete CRUD cycle", () => {
     cy.get('[data-cy="note-title-input"]')
       .should("be.visible")
       .first()
-      .type(signedDocDescription);
+      .type(noteTitle);
 
     cy.get('[data-cy="note-content-input"]')
       .should("be.visible")
@@ -28,10 +43,9 @@ describe("Complete CRUD cycle", () => {
 
   it("reads the new note and update", () => {
     cy.get('a[href="/notes"]').click();
-    cy.get('[data-cy="search-input"]').type(`${signedDocDescription}{enter}`);
+    cy.get('[data-cy="search-input"]').type(`${noteTitle}{enter}`);
 
-    // Wait for the filtered result to appear
-    cy.contains(signedDocDescription).should("exist");
+    cy.contains(noteTitle).should("exist");
     cy.contains("Line 1").should("exist");
 
     cy.get('button[aria-label="edit button"]').first().click();
@@ -41,21 +55,18 @@ describe("Complete CRUD cycle", () => {
       .clear()
       .type("This is the updated note content.");
 
-    // Intercept the PATCH request for saving the updated note
     cy.intercept("PATCH", "**/notes/*").as("updateNote");
 
     cy.get('[data-cy="note-save-btn"]').should("not.be.disabled").click();
 
-    // Wait for PATCH to complete
     cy.wait("@updateNote").its("response.statusCode").should("eq", 200);
   });
 
   it("delete the new note", () => {
     cy.get('a[href="/notes"]').click();
-    cy.get('[data-cy="search-input"]').type(`${signedDocDescription}{enter}`);
+    cy.get('[data-cy="search-input"]').type(`${noteTitle}{enter}`);
 
-    // Wait for the filtered result to appear
-    cy.contains(signedDocDescription).should("exist");
+    cy.contains(noteTitle).should("exist");
     cy.contains("This is the updated note content.").should("exist");
 
     cy.get('button[aria-label="delete button"]').first().click();
@@ -64,5 +75,11 @@ describe("Complete CRUD cycle", () => {
     cy.get(".Container-sc-pabhx0-0").click();
 
     cy.wait("@deleteNote").its("response.statusCode").should("eq", 200);
+  });
+
+  it("confirm deletion", () => {
+    cy.get('a[href="/notes"]').click();
+    cy.get('[data-cy="search-input"]').type(`${noteTitle}{enter}`);
+    cy.contains(noteTitle).should("not.exist");
   });
 });

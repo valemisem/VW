@@ -17,10 +17,3 @@ export const longNameGeneration = (prefix = "CY") => {
     .padStart(2, "0")}${currentDate.getSeconds().toString().padStart(2, "0")}`;
   return `${prefix}_${formattedDateTime}`;
 };
-
-export const shortNameGeneration = (prefix = "CY") => {
-  const currentDate = new Date();
-  return `${prefix}${(currentDate.getMonth() + 1)
-    .toString()
-    .padStart(2, "0")}${currentDate.getDate().toString().padStart(2, "0")}`;
-};

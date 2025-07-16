@@ -12,11 +12,8 @@
     "lint": "eslint .",
     "test": "vitest",
     "preview": "vite preview",
-    
     "start:both": "concurrently \"npm run start:server:cors\" \"npm run start:client\"",
-    "cypress:open:only": "cypress open",
-    "cypress:open": "start-server-and-test start:server:cors http://localhost:3004/notes \"start-server-and-test start:client http://localhost:3003 cypress:open:only\"",
-    "cypress:run": "cypress run"
+    "cypress:open": "cypress open --browser chrome"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.80.6",
@@ -34,6 +31,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
+    "@types/cypress": "^1.1.6",
     "@types/node": "^24.0.1",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
