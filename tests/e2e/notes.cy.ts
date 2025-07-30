@@ -69,3 +69,14 @@ describe("Accessibility - Keyboard Navigation", () => {
     NotesVWPage.tabOrder();
   });
 });
+
+describe.only("new test", () => {
+  beforeEach(() => {
+    cy.visit("/");
+  });
+
+  it("new test to check github actions", () => {
+    cy.get("h1").should("be.visible");
+    cy.get("h1").should("contain", "VW Digital Hub");
+  });
+});
